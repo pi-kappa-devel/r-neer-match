@@ -24,10 +24,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages('remotes')
-          remotes::install_cran("pkgdown")
-          remotes::install_cran("rmarkdown")
-          remotes::install_cran("rmarkdown")
+          Rscript -e "
+            install.packages('remotes')
+            remotes::install_cran("pkgdown")
+            remotes::install_cran("rmarkdown")
+            remotes::install_cran("markdown")
+          "
 
       - name: Build pkgdown site
         run: |

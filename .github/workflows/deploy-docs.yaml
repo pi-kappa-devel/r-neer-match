@@ -25,10 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           Rscript -e "
-            install.packages('remotes')
-            remotes::install_cran("pkgdown")
-            remotes::install_cran("rmarkdown")
-            remotes::install_cran("markdown")
+            install.packages(c('pkgdown', 'rmarkdown', 'roxygen2'))
           "
 
       - name: Build pkgdown site

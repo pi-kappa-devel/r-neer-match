@@ -31,6 +31,8 @@ jobs:
 
       - name: Build pkgdown site
         run: |
+          R CMD build .
+          R CMD INSTALL neermatch_*.tar.gz
           Rscript -e "
             rmarkdown::render('README.Rmd', output_format = 'md_document');
             roxygen2::roxygenize();

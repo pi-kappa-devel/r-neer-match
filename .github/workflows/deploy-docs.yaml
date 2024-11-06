@@ -24,6 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get install -y lftp pandoc
           Rscript -e "
             install.packages(c('pkgdown', 'rmarkdown', 'roxygen2'))
           "
@@ -40,7 +41,6 @@ jobs:
         env:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          sudo apt-get install -y lftp
           lftp -c "
             open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER;
             mirror -R -P 5 docs $FTP_DOCS_PATH;

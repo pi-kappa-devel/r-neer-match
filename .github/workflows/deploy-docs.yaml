@@ -26,16 +26,16 @@ jobs:
         run: |
           install.packages('remotes')
           remotes::install_cran("pkgdown")
-	  remotes::install_cran("rmarkdown")
-	  remotes::install_cran("roxygen2")
+          remotes::install_cran("rmarkdown")
+          remotes::install_cran("rmarkdown")
 
       - name: Build pkgdown site
         run: |
           Rscript -e "
-	    rmarkdown::render('README.Rmd', output_format = 'md_document');
-	    roxygen2::roxygenize();
-	    pkgdown::build_site();
-	  "
+            rmarkdown::render('README.Rmd', output_format = 'md_document');
+            roxygen2::roxygenize();
+            pkgdown::build_site();
+            "
 
       - name: Deploy documentation via FTP
         env:

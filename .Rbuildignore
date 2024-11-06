@@ -1,0 +1,11 @@
+^LICENSE\.md$
+^Meta$
+^README\.Rmd$
+^\.github$
+^\.lintr$
+^_pkgdown\.yml$
+^bibliography\.bib$
+^codecov\.yml$
+^doc$
+^docs$
+^pkgdown$

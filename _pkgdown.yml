@@ -1,0 +1,14 @@
+run_dont_run: TRUE
+url: https://r-neer-match.pikappa.eu
+authors:
+  Pantelis Karapanagiotis:
+    href: https://www.pikappa.eu
+  Marius Liebald:
+    href: https://www.marius-liebald.de
+development:
+  mode: auto
+template:
+  bootstrap: 5
+  bootswatch: journal
+  theme: solarized-light
+  theme-dark: solarized-dark

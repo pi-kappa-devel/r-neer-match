@@ -1,0 +1,41 @@
+Package: neermatch
+Title: NEural-symbolic Entity Reasoning and Matching
+Version: 0.4.9016
+Authors@R: c(
+    person("Pantelis", "Karapanagiotis", , "pikappa.devel@gmail.com",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9871-1908")),
+    person("Marius", "Liebald", , "maliedvp@gmail.com",
+           role = c("ctb"), comment = c(ORCID = "0000-0003-4636-1154")))
+Description: Provides a customizable neural-symbolic model generator for
+    entity-matching and reasoning using similarity encoders. The matching models are
+    automatically constructed from similarity maps, i.e., concise representations of
+    potential similarity associations across data sets. Further, the package combines
+    similarity maps with neural-symbolic learning to support out-of-the-box fuzzy
+    logic reasoning (by refutation) with respect to the relevance of an association
+    in generic entity-matching tasks. 
+Language:
+    en-US
+URL: https://github.com/pi-kappa-devel/r-neer-match/, https://r-neer-match.pikappa.eu/
+BugReports: https://github.com/pi-kappa-devel/r-neer-match/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    methods,
+    reticulate,
+    tensorflow
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Collate: 
+    'zzz.R'
+    'data.R'
+    'similarity_map.R'
+    'matching_model.R'

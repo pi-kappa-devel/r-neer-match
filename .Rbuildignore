@@ -1,3 +1,5 @@
+^.coverage$
+^.pytest_cache/*$
 ^LICENSE\.md$
 ^Meta$
 ^README\.Rmd$

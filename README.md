@@ -25,6 +25,9 @@ Forschungsgemeinschaft](https://www.dfg.de/de) (DFG) under Grant
 Spaces for the Social Sciences](https://www.new-data-spaces.de/en-us/)”
 (SPP 2431).
 
+The package has also an `Python` implementation available at
+[py-neer-match](https://github.com/pi-kappa-devel/py-neer-match).
+
 ## Features
 
 The package is built on the concept of similarity maps. Similarity maps
@@ -157,6 +160,15 @@ Finally, the documentaion website uses
 ``` r
 pkgdown::build_site(lazy = TRUE)
 ```
+
+## Logo
+
+The logo was designed using [Microsoft
+Designer](https://designer.microsoft.com/) and [GNU Image Manipulation
+Program (GIMP)](https://www.gimp.org/). The hexagon version of the logo
+was generated with the R package
+[hexSticker](https://github.com/GuangchuangYu/hexSticker). It uses the
+[Philosopher](https://fonts.google.com/specimen/Philosopher) font.
 
 # Alternative Software
 

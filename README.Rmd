@@ -37,6 +37,8 @@ The package `neermatch` provides a set of tools for neural-symbolic entity reaso
 
 The project is financially supported by the [Deutsche Forschungsgemeinschaft](https://www.dfg.de/de) (DFG) under Grant 539465691 as part of the Infrastructure Priority Programme "[New Data Spaces for the Social Sciences](https://www.new-data-spaces.de/en-us/)" (SPP 2431). 
 
+The package has also an `Python` implementation available at [py-neer-match](https://github.com/pi-kappa-devel/py-neer-match).
+
 ## Features
 The package is built on the concept of similarity maps. Similarity maps are concise representations of potential associations between fields in two datasets. Entities from two datasets can be matched using one or more pairs of fields (one from each dataset). Each field pair can have one or more ways to compute the similarity between the values of the fields.
 
@@ -127,7 +129,7 @@ Finally, the documentaion website uses [pkgdown](https://pkgdown.r-lib.org/) [@p
 pkgdown::build_site(lazy = TRUE)
 ```
 
-# Logo
+## Logo
 The logo was designed using [Microsoft Designer](https://designer.microsoft.com/) and [GNU Image Manipulation Program (GIMP)](https://www.gimp.org/). The hexagon version of the logo was generated with the R package [hexSticker](https://github.com/GuangchuangYu/hexSticker). It uses the [Philosopher](https://fonts.google.com/specimen/Philosopher) font.
 
 # Alternative Software

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'man/**'
+      - 'README.Rmd'
 
 jobs:
   build-and-deploy:
@@ -17,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2

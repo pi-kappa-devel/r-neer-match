@@ -28,6 +28,10 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
 
+      - name: Install dependencies
+        run: |
+          pip install neer-match
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(

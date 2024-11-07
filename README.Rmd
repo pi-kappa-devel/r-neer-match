@@ -10,7 +10,7 @@ output:
   github_document:
     math_method: webtex
   md_document:
-    variant: gfm+tex_math_dollars
+    variant: gfm
 bibliography: bibliography.bib
 ---
 

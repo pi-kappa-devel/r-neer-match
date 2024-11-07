@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - 'man/**'
-      - 'README.Rmd'
 
 jobs:
   build-and-deploy:

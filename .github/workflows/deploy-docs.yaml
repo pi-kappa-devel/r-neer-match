@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y lftp libcurl libfribidi-dev libharfbuzz-dev pandoc
+          sudo apt-get install -y curl lftp libfribidi-dev libharfbuzz-dev pandoc
           pip install neer-match
           Rscript -e "
             install.packages(c('pkgdown', 'reticulate', 'rmarkdown', 'roxygen2', 'tensorflow'))

@@ -5,11 +5,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-The example concisely introduces the basic concepts and functionality of the package. Its goals are (i) to bring the reader up to speed with how to use the package to fit entity-matching models and (ii) to familiarize the reader with the basic concepts that are used in the documentation and naming conventions of the package. For simplicity, we use a deep learning matching model for this example. Examples of neural-symbolic matching models are given in the [Neural-symbolic Entity Matching](ns-matching) and [Reasoning](rr-matching) vignettes.
+The example concisely introduces the basic concepts and functionality of the package. Its goals are (i) to bring the reader up to speed with how to use the package to fit entity-matching models and (ii) to familiarize the reader with the basic concepts that are used in the documentation and naming conventions of the package. For simplicity, we use a deep learning matching model for this example. Examples of neural-symbolic matching models are given in the [Neural-symbolic Entity Matching](ns-matching.html) and [Reasoning](rr-matching.html) vignettes.
 
 ## Prerequisites
 Load the libraries we will use and set the seed for reproducibility.
-```{r setup}
+```{r setup, message=FALSE}
 library(tensorflow)
 library(neermatch)
 
@@ -22,7 +22,7 @@ tensorflow::tf$random$set_seed(42)
 The preprocessing stage aims to bring the data in a form compatible with the `neermatch` package's calling conventions. The package expects the data to be in the form of two data frames, `left` and `right`, that contain the entities to be matched. The package also expects a third data frame, `matches`, that contains the indices of the matching entities in the `left` and `right` data frames. We illustrate the calling convention by constructing a toy example.
 
 ### Left Data Set
-The data used in this example is constructed from a subset of the `game_reviews` dataset shipped with the package (see the [game_review documentation](https://r-neer-match.pikappa.eu/reference/game_reviews.html)). The subset is created by selecting all the records in `game_reviews` having titles starting with either `"Metal Slug"` or `"Metal Gear"`.  The selection code is replicated here to keep the example code self-contained. Following the package's naming convention, we name the resulting data frame left.
+The data used in this example is constructed from a subset of the `game_reviews` dataset shipped with the package (see the [game_review documentation](../reference/game_reviews.html)). The subset is created by selecting all the records in `game_reviews` having titles starting with either `"Metal Slug"` or `"Metal Gear"`.  The selection code is replicated here to keep the example code self-contained. Following the package's naming convention, we name the resulting data frame left.
 ```{r left-data}
 left <- neermatch::game_reviews[
   startsWith(neermatch::game_reviews$title, c("Metal Gear", "Metal Slug")),
@@ -67,7 +67,7 @@ A matching model initialization requires instructions on constructing the simila
 
 If the column names of the `left` and `right` are the same, it suffices to supply the common name to the similarity map instruction list (see, e.g., the `title`, `platform`, and `year` items below). If two columns have different names, the instruction should have the form `left_name~right_name`, as it is, for instance, the case for the developing studio in this application (see item `developer~dev`). Not all columns of the datasets need to be used in the instructions. We do not use the `scores` and `reviews` columns in this example.
 
-The model can be instructed to calculate one or more similarities for each column association. For instance, the instructions of this example specify two similarity calculations for the `platform` and `year` associations and one for the `title` and `developer~dev`. The `neermatch` provides a set of predefined similarity functions that can be used in similarity maps. The string similarities and ratios are calculated using [RapidFuzz](https://maxbachmann.github.io/RapidFuzz/). The complete set of predefined functions can be retrieved by calling the [available_similarities()](https://r-neer-match.pikappa.eu/dev/reference/available_similarities.html) function.
+The model can be instructed to calculate one or more similarities for each column association. For instance, the instructions of this example specify two similarity calculations for the `platform` and `year` associations and one for the `title` and `developer~dev`. The `neermatch` provides a set of predefined similarity functions that can be used in similarity maps. The string similarities and ratios are calculated using [RapidFuzz](https://maxbachmann.github.io/RapidFuzz/). The complete set of predefined functions can be retrieved by calling the [available_similarities()](../reference/available_similarities.html) function.
 
 ```{r similarity-map}
 instructions <- list(
@@ -78,10 +78,10 @@ instructions <- list(
 )
 
 similarity_map <- SimilarityMap(instructions)
-print(similarity_map)
+show(similarity_map)
 ```
 
-A matching model object is constructed by passing the similarity map instructions. The model prepares encoding operations based on the passed instructions and uses them whenever the model is fitted or evaluated. We skip the construction details of the model in this example and refer the interested reader to the documentation entries of the [DLMatchingModel](https://r-neer-match.pikappa.eu/reference/DLMatchingModel.html), and the `Python` [RecordPairNetwork](https://py-neer-match.pikappa.eu/record_pair_network.html#neer_match.record_pair_network.RecordPairNetwork), and [FieldPairNetwork](https://py-neer-match.pikappa.eu/field_pair_network.html#neer_match.field_pair_network.FieldPairNetwork) classes.
+A matching model object is constructed by passing the similarity map instructions. The model prepares encoding operations based on the passed instructions and uses them whenever the model is fitted or evaluated. We skip the construction details of the model in this example and refer the interested reader to the documentation entries of the [DLMatchingModel](../reference/DLMatchingModel.html), and the `Python` [RecordPairNetwork](https://py-neer-match.pikappa.eu/record_pair_network.html#neer_match.record_pair_network.RecordPairNetwork), and [FieldPairNetwork](https://py-neer-match.pikappa.eu/field_pair_network.html#neer_match.field_pair_network.FieldPairNetwork) classes.
 ```{r make-dl-matching-model}
 model <- DLMatchingModel(similarity_map)
 ```
@@ -95,25 +95,25 @@ model |> compile(
 ```
 
 ## Matching Model Fit and Evaluation
-The model is fitted using the `fit` function (see the [fit documentation](https://r-neer-match.pikappa.eu/reference/fit.html) for details). The `fit` function extends the functionality of [tensorflow.keras.Model.fit](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit) to accommodate the entity matching problem requirements. Firstly, instead of passing features and label arguments, `fit` expects the `left`, `right`, and `matches` data frames. 
+The model is fitted using the `fit` function (see the [fit documentation](../reference/fit.html) for details). The `fit` function extends the functionality of [tensorflow.keras.Model.fit](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit) to accommodate the entity matching problem requirements. Firstly, instead of passing features and label arguments, `fit` expects the `left`, `right`, and `matches` data frames. 
 
 During training, counterexamples of matching records are automatically selected from the cross-product of left and right data frames based on the `mismatch_share` parameter. Including all the non-matching examples can lead to a highly unbalanced matching dataset. For each record in the `left` data set, appearing in k examples in the `matches` data set, there are up to `n - k` counterexamples, where `n` is the number of records in the `right` data set. The `mismatch_share` parameter controls the ratio of counterexamples to matches. For instance, if `mismatch_share = 0.5`, the `encode` function selects 50% of the possible counterexamples for each match. The counterexamples are selected randomly from the `right` dataset. 
 
 For instance, the `left` and `right` data sets in this example have `{r} nrow(left)` and `{r} nrow(right)` records, respectively, and the `matches` data set has `{r} nrow(matches)` records. This allows us to construct `{r} nrow(left) * nrow(right) - nrow(matches)` non-matching examples. We set `mismatch_share = 0.2`, which means that for each matching example provided in `matches`, we get `{r} int(0.2*(nrow(matches.) - 1))` non-matching examples (the integer part, i.e., the floor, of the number of counterexamples used).
 
 The remaining arguments are similar to [tensorflow.keras.Model.fit](https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit).
-```{r fit-dl-model}
+```{r fit-dl-model, output=FALSE}
 model |> fit(
   left,
   right,
   matches,
-  epochs = 1L, #100L,
+  epochs = 101L,
   batch_size = 32L,
   verbose = 0L
 )
 ```
 
-The `evaluate` function overloads the [tensorflow.keras.Model.evaluate](https://www.tensorflow.org/api_docs/python/tf/keras/Model#evaluate) function (see also the [evaluate documentation](https://r-neer-match.pikappa.eu/reference/evaluate.html)). Similar to fitting a matching model, the `evaluate` call expects `left`, `right`, and `matches` data sets. 
+The `evaluate` function overloads the [tensorflow.keras.Model.evaluate](https://www.tensorflow.org/api_docs/python/tf/keras/Model#evaluate) function (see also the [evaluate documentation](../reference/evaluate.html)). Similar to fitting a matching model, the `evaluate` call expects `left`, `right`, and `matches` data sets. 
 ```{r evaluate-dl-model}
 model |>
   evaluate(left, right, matches, verbose = 0L)

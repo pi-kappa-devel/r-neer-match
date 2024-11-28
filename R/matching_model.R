@@ -312,11 +312,8 @@ setMethod(
 #' @rdname compile
 #' @description
 #' \subsection{\code{\link{NSMatchingModel}}}{
-#' Neural symbolic models are fit using a custom training loop so there is
-#' no need to calls
-#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#compile}{
-#' tf.keras.compile} method of the \code{tf.keras.Model} class. The method
-#' sets the optimizer for the model. The loss (for hybrid neural-symbolic and
+#' Neural symbolic models are fitted using a custom training loop. The method
+#' sets the optimizer for model training. The loss (for hybrid neural-symbolic and
 #' deep learning models) is set to binary cross-entropy (
 #' \href{https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy}{
 #' tf.keras.losses.BinaryCrossentropy})
@@ -430,11 +427,14 @@ setMethod(
 #' @rdname fit
 #' @description
 #' \subsection{\code{\link{NSMatchingModel}}}{
-#' The method passes the constructed generator and any
-#' additional call arguments to
-#' directly to the
-#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
-#' tf.keras.fit}.
+#' The method constructs a data generator from the input data frames
+#' using the similarity map with which the model was initialized and fits
+#' the model.
+#'
+#' The model is trained using a custom training loop. The loss can either
+#' be purely defined using fuzzy logic axioms (default case with satisfiability
+#' weight 1.0) or as a weighted sum of binary cross-entropy and satisfiability
+#' loss (by setting the satisfiability weight to a value between 0 and 1).
 #' }
 #' @param epochs The number of epochs to train the model.
 #' @param satisfiability_weight A numeric value in the range \eqn{[0, 1]}

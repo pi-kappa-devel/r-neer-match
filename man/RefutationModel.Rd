@@ -42,7 +42,10 @@ arguments are passed down to the
 constructor.}
 }
 \description{
-todo
+Inherits \code{\link{NSMatchingModel}} and provides additional functionality
+for refutation reasoning. The built-in refutation logic allows one to
+refute the significance of one or more similarities of conjectured
+association in detecting entity matches.
 }
 \examples{
 smap <- SimilarityMap(

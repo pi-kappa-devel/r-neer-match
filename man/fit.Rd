@@ -78,6 +78,22 @@ hybrid model.}
 
 \item{log_mod_n}{An positive integer that determines the frequency of
 logging. The method logs every \code{log_mod_n} epochs.}
+
+\item{refutation}{The refutation claim. A single element named list, where
+the name is a field pair association in the similarity map and the value
+is a list of one or more similarities. If instead a string is provided, the
+method uses all the similarities in the similarity map for the refutation.}
+
+\item{penalty_threshold}{A numeric value in the range \eqn{[0, 1]} that
+determines the threshold for the penalty. If the loss is below the threshold,
+the penalty is applied.}
+
+\item{penalty_scale}{A numeric value that determines the linear scale of the
+penalty when the threshold is not crossed.}
+
+\item{penalty_decay}{A numeric value in the range \eqn{[0, 1]} that
+determines the exponential decay of the penalty when the threshold is
+crossed.}
 }
 \value{
 Called for side effects (model training).
@@ -99,19 +115,36 @@ tf.keras.fit}.
 }
 
 \subsection{\code{\link{NSMatchingModel}}}{
-The method passes the constructed generator and any
-additional call arguments to
-directly to the
-\href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
-tf.keras.fit}.
+The method constructs a data generator from the input data frames
+using the similarity map with which the model was initialized and fits
+the model.
+
+The model is trained using a custom training loop. The loss can either
+be purely defined using fuzzy logic axioms (default case with satisfiability
+weight 1.0) or as a weighted sum of binary cross-entropy and satisfiability
+loss (by setting the satisfiability weight to a value between 0 and 1).
 }
 
-\subsection{\code{\link{RefutationMatchingModel}}}{
-The method passes the constructed generator and any
-additional call arguments to
-directly to the
-\href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
-tf.keras.fit}.
+\subsection{\code{\link{RefutationModel}}}{
+The method constructs a data generator and an axiom generator from the
+input data and uses the model's similarity map to fit the model while trying
+to refute the refutation claim.
+
+In the default case of satisfiability weight equal to 1, the function
+minimizes the satisfiability of the refutation claim
+while penalizing the satisfiability of the matching axioms below the
+penalty threshold. If the satisfiability weight is less than 1, the model is
+trained to optimize the satisfiability of the refutation claim, while
+penalizing a weighted sum of the satisfiability of the matching axioms and
+the binary cross entropy loss for values below the penalty threshold.
+
+The penalty threshold sets tolerance for the matching axioms (and/or the
+binary cross entropy loss) below which the penalty is applied. The penalty
+scale sets the linear scale of the penalty when the threshold is not crossed.
+The penalty decay sets the exponential decay of the penalty when the
+threshold is crossed. The linear and exponential parts are combined using the
+\href{https://www.tensorflow.org/api_docs/python/tf/keras/activations/elu}{
+\code{tf.keras.activations.elu}} function.
 }
 }
 \examples{

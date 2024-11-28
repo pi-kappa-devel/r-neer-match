@@ -5,11 +5,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-The example illustrates the package's out-of-the-box reasoning functionality. The goals of the example are (i) to introduce the available options and (ii) discuss the underlying logic of the reasoning. For an introduction to basic concepts and conventions of the package one may consult the [Entity Matching with Similarity Maps and Deep Learning](dl-matching) example (henceforth Example 1). For an introduction to the package's neural-symbolic entity matching functionality, one may consult the [Neural-Symbolic Learning](ns-matching) example (henceforth Example 2).
+The example illustrates the package's out-of-the-box reasoning functionality. The goals of the example are (i) to introduce the available options and (ii) discuss the underlying logic of the reasoning. For an introduction to basic concepts and conventions of the package one may consult the [Entity Matching with Similarity Maps and Deep Learning](dl-matching.html) example (henceforth Example 1). For an introduction to the package's neural-symbolic entity matching functionality, one may consult the [Neural-Symbolic Learning](ns-matching.html) example (henceforth Example 2).
 
 ## Prerequisites
 Load the libraries we will use and set the seed for reproducibility.
-```{r setup}
+```{r setup, message=FALSE}
 library(tensorflow)
 library(neermatch)
 
@@ -18,7 +18,7 @@ tensorflow::tf$random$set_seed(42)
 ```
 
 ## Preprocessing
-We use the gaming data of [Example 1](dl-matching) and [Example 2](ns-matching). Similar to the deep and the neural-symbolic cases, the reasoning functionality leverages similarity maps and expects the same structure of datasets as inputs. More details are given in [Example 1](dl-matching) and [Example 2](ns-matching). In summary, our preprocessing stage constructs three datasets `left`, `right`, and `matches`, where `left` has 36 records, `right` has 39 records, and `matches` has the indices of the matching records in `left` and `right`. 
+We use the gaming data of [Example 1](dl-matching.html) and [Example 2](ns-matching.html). Similar to the deep and the neural-symbolic cases, the reasoning functionality leverages similarity maps and expects the same structure of datasets as inputs. More details are given in [Example 1](dl-matching.html) and [Example 2](ns-matching.html). In summary, our preprocessing stage constructs three datasets `left`, `right`, and `matches`, where `left` has 36 records, `right` has 39 records, and `matches` has the indices of the matching records in `left` and `right`. 
 
 ```{r data-setup}
 matching_data <- fuzzy_games_example_data()
@@ -28,7 +28,7 @@ matches <- matching_data$matches
 ```
 
 ## Refutation Model Setup
-We employ the similarity map we used in [Example 1](dl-matching) and [Example 2](ns-matching).
+We employ the similarity map we used in [Example 1](dl-matching.html) and [Example 2](ns-matching.html).
 
 ```{r similarity-map}
 instructions <- list(
@@ -39,7 +39,7 @@ instructions <- list(
 )
 
 similarity_map <- SimilarityMap(instructions)
-print(similarity_map)
+show(similarity_map)
 ```
 
 The out-of-the-box reasoning that the `neer_match` package provides allows one to easily refute the significance of one or more conjectured associations in detecting entity matches. The functionality is provided by the class `RefutationModel`. The `RefutationModel` inherits from the `NSMatchingModel` class and provides additional functionality allowing one to use refutation logic. 
@@ -63,7 +63,7 @@ model |> compile(
 ```
 
 ## Model Training
-The model is fitted using the `fit` function (see the [fit documentation](http://127.0.0.1:8000/reasoning.html#neer_match.reasoning.RefutationModel.fit) for details). Similar to the deep and neural-symbolic entity matching models, the `fit` function expects `left`, `right`, and `matches` data sets. Moreover, the `mismatch_share` parameter controls the ratio of counterexamples to matches. The parameter `satisfiability_weight` controls the mixing of the binary cross entropy and matching axioms' satisfiability during model training. Finally, logging verbosity and frequency are controlled by the parameters `verbose` and `log_mod_n` (see also [Example 2](ns-matching)). 
+The model is fitted using the `fit` function (see the [fit documentation](../reference/fit.html) for details). Similar to the deep and neural-symbolic entity matching models, the `fit` function expects `left`, `right`, and `matches` data sets. Moreover, the `mismatch_share` parameter controls the ratio of counterexamples to matches. The parameter `satisfiability_weight` controls the mixing of the binary cross entropy and matching axioms' satisfiability during model training. Finally, logging verbosity and frequency are controlled by the parameters `verbose` and `log_mod_n` (see also [Example 2](ns-matching.html)). 
 
 More importantly, the refutation model fit method introduces four new parameters, namely `refutation`, `penalty_threshold`, `penalty_scale`, and `penalty_decay`, to guide the model's refutation reasoning. The `refutation` parameter is either a field pair association of a dictionary with a signle field pair association as key and a list of similarities as value. In the first case, the model will try to refute the association between the two fields using the similarities documented in its similarity map. In the second case, the model will try to refute the association between the field pair using only the similarities in the list. The refutation claim is that the supplied field pair's similarities are a (fuzzy) necessary condition for entity matching, i.e., whenever a record pair constitutes a match, the supplied field pair's similarities are close to one. Refutation involves minimizing the satisfiability of the refutation claim, while penalizing states for which the entity matching axioms are not satisfied. 
 

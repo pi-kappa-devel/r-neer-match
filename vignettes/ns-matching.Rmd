@@ -5,11 +5,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-The example introduces the package's entity matching functionality using neural-symbolic learning. The goals of the example are (i) to introduce the available options, (ii) discuss some aspects of the underlying model logic, and (iii) contrast the neural-symbolic functionality to that of purely deep learning entity matching. For an introduction to basic concepts and conventions of the package one may consult the [Entity Matching with Similarity Maps and Deep Learning](dl-matching) example (henceforth Example 1). For the reasoning capabilities of the package, set the [Reasoning](rr-matching) example.
+The example introduces the package's entity matching functionality using neural-symbolic learning. The goals of the example are (i) to introduce the available options, (ii) discuss some aspects of the underlying model logic, and (iii) contrast the neural-symbolic functionality to that of purely deep learning entity matching. For an introduction to basic concepts and conventions of the package one may consult the [Entity Matching with Similarity Maps and Deep Learning](dl-matching.html) example (henceforth Example 1). For the reasoning capabilities of the package, set the [Reasoning](rr-matching.html) example.
 
 ## Prerequisites
 Load the libraries we will use and set the seed for reproducibility.
-```{r setup}
+```{r setup, message=FALSE}
 library(tensorflow)
 library(neermatch)
 
@@ -18,7 +18,7 @@ tensorflow::tf$random$set_seed(42)
 ```
 
 ## Preprocessing
-We use the gaming data of [Example 1](dl-matching). Similar to the deep learning case, the neural-symbolic functionality leverages similarity maps and expects the same structure of datasets as inputs. The concepts and requirements are detailed in [Example 1](dl-matching), we abstain from detailing them here for brevity. In summary, our preprocessing stage constructs three datasets `left`, `right`, and `matches`, where `left` has 36 records, `right` has 39 records, and `matches` has the indices of the matching records in `left` and `right`. 
+We use the gaming data of [Example 1](dl-matching.html). Similar to the deep learning case, the neural-symbolic functionality leverages similarity maps and expects the same structure of datasets as inputs. The concepts and requirements are detailed in [Example 1](dl-matching.html), we abstain from detailing them here for brevity. In summary, our preprocessing stage constructs three datasets `left`, `right`, and `matches`, where `left` has 36 records, `right` has 39 records, and `matches` has the indices of the matching records in `left` and `right`. 
 
 ```{r data-setup}
 matching_data <- fuzzy_games_example_data()
@@ -28,7 +28,7 @@ matches <- matching_data$matches
 ```
 
 ## Matching Model Setup
-For simplicity, we employ the similarity map we used in [Example 1](dl-matching).
+For simplicity, we employ the similarity map we used in [Example 1](dl-matching.html).
 
 ```{r similarity-map}
 instructions <- list(
@@ -39,7 +39,7 @@ instructions <- list(
 )
 
 similarity_map <- SimilarityMap(instructions)
-print(similarity_map)
+show(similarity_map)
 ```
 
 Matching models using neural-symbolic learning are constructed using the `NSMatchingModel` class. The constructor expects a similarity map object, exactly as in the pure deep learning case. 
@@ -58,7 +58,7 @@ model |> compile(
 ```
 
 ## Model Training
-The model is fitted using the `fit` function (see the [fit documentation](https://py-neer-match.pikappa.eu/matching_model.html#neer_match.matching_model.NSMatchingModel.fit) for details). The underline training loop of the neural-symbolic model is custom. Training treats the [field pair](https://py-neer-match.pikappa.eu/field_pair_network.html#neer_match.field_pair_network.FieldPairNetwork) and [record pair](https://py-neer-match.pikappa.eu/record_pair_network.html#neer_match.record_pair_network.RecordPairNetwork) models as fuzzy logic predicates. It adjusts their parameters to satisfy the following logic. First, for every matching example, all the field predicates and the record predicate should be (fuzzily) true. This rule is motivated by the observations that true record matches should in principle constitute matches in all subsets of their associated fields. Second, at least one of the field predicates and the record predicate should by (fuzzily) false for every non matching example. This rule is motivated by the observation that non matches should be distinct in at least one of their associated fields, because if they are not, then, in principle, they constitute a match.
+The model is fitted using the `fit` function (see the [fit documentation](../reference/fit.html) for details). The underline training loop of the neural-symbolic model is custom. Training treats the `Python` [field pair](https://py-neer-match.pikappa.eu/field_pair_network.html#neer_match.field_pair_network.FieldPairNetwork) and [record pair](https://py-neer-match.pikappa.eu/record_pair_network.html#neer_match.record_pair_network.RecordPairNetwork) models as fuzzy logic predicates. It adjusts their parameters to satisfy the following logic. First, for every matching example, all the field predicates and the record predicate should be (fuzzily) true. This rule is motivated by the observations that true record matches should in principle constitute matches in all subsets of their associated fields. Second, at least one of the field predicates and the record predicate should by (fuzzily) false for every non matching example. This rule is motivated by the observation that non matches should be distinct in at least one of their associated fields, because if they are not, then, in principle, they constitute a match.
 
 The `fit` function expects `left`, `right`, and `matches` data sets. As in the deep learning case, the `mismatch_share` parameter controls the ratio of counterexamples to matches. The parameter `satisfiability_weight` is a float value between 0 and 1 that controls the weight of the satisfiability loss in the total loss function. The default value is 1.0, i.e., the training process considers only the fuzzy logic axioms. A value of 0.0 means that only the binary cross entropy loss is considered, which essentially reduces the model to a deep learning model. Any value between 0 and 1 trains a hybrid model that balances the two losses. 
 
@@ -69,7 +69,7 @@ model |> fit(
   left,
   right,
   matches,
-  epochs = 1L, # 100L,
+  epochs = 151L,
   batch_size = 16L,
   verbose = 1L,
   log_mod_n = 10L

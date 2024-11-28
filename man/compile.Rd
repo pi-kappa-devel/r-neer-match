@@ -40,25 +40,16 @@ tf.keras.compile} method of the \code{tf.keras.Model} class.
 }
 
 \subsection{\code{\link{NSMatchingModel}}}{
-Neural symbolic models are fit using a custom training loop so there is
-no need to calls
-\href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#compile}{
-tf.keras.compile} method of the \code{tf.keras.Model} class. The method
-sets the optimizer for the model. The loss (for hybrid neural-symbolic and
+Neural symbolic models are fitted using a custom training loop. The method
+sets the optimizer for model training. The loss (for hybrid neural-symbolic and
 deep learning models) is set to binary cross-entropy (
 \href{https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy}{
 tf.keras.losses.BinaryCrossentropy})
 }
 
 \subsection{\code{\link{RefutationModel}}}{
-Neural symbolic models are fit using a custom training loop so there is
-no need to calls
-\href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#compile}{
-tf.keras.compile} method of the \code{tf.keras.Model} class. The method
-sets the optimizer for the model. The loss (for hybrid neural-symbolic and
-deep learning models) is set to binary cross-entropy (
-\href{https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy}{
-tf.keras.losses.BinaryCrossentropy})
+Refutation models, similar to neural-symbolic models (\code{NSMatchingModel}),
+are fitted using a custom. The method sets the optimizer for model training.
 }
 }
 \examples{

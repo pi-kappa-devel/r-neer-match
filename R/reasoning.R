@@ -4,7 +4,10 @@
 
 #' @title Refutation Model
 #' @description
-#' todo
+#' Inherits \code{\link{NSMatchingModel}} and provides additional functionality
+#' for refutation reasoning. The built-in refutation logic allows one to
+#' refute the significance of one or more similarities of conjectured
+#' association in detecting entity matches.
 #'
 #' @param similarity_map A \code{\link{SimilarityMap}} object.
 #' @param initial_feature_width_scales An integer or an integer vector of
@@ -60,14 +63,8 @@ setOldClass("neer_match.reasoning.RefutationModel")
 #' @rdname compile
 #' @description
 #' \subsection{\code{\link{RefutationModel}}}{
-#' Neural symbolic models are fit using a custom training loop so there is
-#' no need to calls
-#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#compile}{
-#' tf.keras.compile} method of the \code{tf.keras.Model} class. The method
-#' sets the optimizer for the model. The loss (for hybrid neural-symbolic and
-#' deep learning models) is set to binary cross-entropy (
-#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/losses/BinaryCrossentropy}{
-#' tf.keras.losses.BinaryCrossentropy})
+#' Refutation models, similar to neural-symbolic models (\code{NSMatchingModel}),
+#' are fitted using a custom. The method sets the optimizer for model training.
 #' }
 #' @param optimizer A
 #' \href{https://www.tensorflow.org/api_docs/python/tf/keras/optimizers}{
@@ -110,14 +107,40 @@ setMethod(
 
 #' @rdname fit
 #' @description
-#' \subsection{\code{\link{RefutationMatchingModel}}}{
-#' The method passes the constructed generator and any
-#' additional call arguments to
-#' directly to the
-#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
-#' tf.keras.fit}.
+#' \subsection{\code{\link{RefutationModel}}}{
+#' The method constructs a data generator and an axiom generator from the
+#' input data and uses the model's similarity map to fit the model while trying
+#' to refute the refutation claim.
+#'
+#' In the default case of satisfiability weight equal to 1, the function
+#' minimizes the satisfiability of the refutation claim
+#' while penalizing the satisfiability of the matching axioms below the
+#' penalty threshold. If the satisfiability weight is less than 1, the model is
+#' trained to optimize the satisfiability of the refutation claim, while
+#' penalizing a weighted sum of the satisfiability of the matching axioms and
+#' the binary cross entropy loss for values below the penalty threshold.
+#'
+#' The penalty threshold sets tolerance for the matching axioms (and/or the
+#' binary cross entropy loss) below which the penalty is applied. The penalty
+#' scale sets the linear scale of the penalty when the threshold is not crossed.
+#' The penalty decay sets the exponential decay of the penalty when the
+#' threshold is crossed. The linear and exponential parts are combined using the
+#' \href{https://www.tensorflow.org/api_docs/python/tf/keras/activations/elu}{
+#' \code{tf.keras.activations.elu}} function.
 #' }
 #' @param epochs The number of epochs to train the model.
+#' @param refutation The refutation claim. A single element named list, where
+#' the name is a field pair association in the similarity map and the value
+#' is a list of one or more similarities. If instead a string is provided, the
+#' method uses all the similarities in the similarity map for the refutation.
+#' @param penalty_threshold A numeric value in the range \eqn{[0, 1]} that
+#' determines the threshold for the penalty. If the loss is below the threshold,
+#' the penalty is applied.
+#' @param penalty_scale A numeric value that determines the linear scale of the
+#' penalty when the threshold is not crossed.
+#' @param penalty_decay A numeric value in the range \eqn{[0, 1]} that
+#' determines the exponential decay of the penalty when the threshold is
+#' crossed.
 #' @param satisfiability_weight A numeric value in the range \eqn{[0, 1]}
 #' representing the weight allocated to the satisfiability loss of a
 #' hybrid model.

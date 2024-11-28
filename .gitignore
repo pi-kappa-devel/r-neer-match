@@ -20,9 +20,5 @@
 *.tar.gz
 /Meta/
 /doc/
-Meta/
 Rplots.pdf
-doc/
 docs
-vignettes/*.R
-vignettes/*.html

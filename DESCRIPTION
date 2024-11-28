@@ -1,6 +1,6 @@
 Package: neermatch
 Title: NEural-symbolic Entity Reasoning and Matching
-Version: 0.4.9019
+Version: 0.4.9021
 Authors@R: c(
     person("Pantelis", "Karapanagiotis", , "pikappa.devel@gmail.com",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9871-1908")),
@@ -39,3 +39,4 @@ Collate:
     'data.R'
     'similarity_map.R'
     'matching_model.R'
+    'reasoning.R'

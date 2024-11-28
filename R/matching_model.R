@@ -333,10 +333,11 @@ setMethod(
   }
 )
 
-matching_model_evaluate <- function(object, left, right, ...) {
+matching_model_evaluate <- function(object, left, right, matches, ...) {
   py_left <- reticulate::r_to_py(left)
   py_right <- reticulate::r_to_py(right)
-  object$evaluate(py_left, py_right, ...)
+  py_matches <- reticulate::r_to_py(matches) - 1L
+  object$evaluate(py_left, py_right, py_matches, ...)
 }
 
 #' @rdname evaluate
@@ -386,7 +387,9 @@ setMethod(
   }
 )
 
-matching_model_fit <- function(object, left, right, matches, ...) {
+matching_model_fit <- function(object,
+                               left, right, matches,
+                               ...) {
   py_left <- reticulate::r_to_py(left)
   py_right <- reticulate::r_to_py(right)
   py_matches <- reticulate::r_to_py(matches) - 1L
@@ -402,20 +405,31 @@ matching_model_fit <- function(object, left, right, matches, ...) {
 #' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
 #' tf.keras.fit}.
 #' }
+#' @param batch_size The batch size (integer).
+#' @param mismatch_share A numeric value in the range \eqn{[0, 1]} representing
+#' the share of used mismatched pairs in the input data.
+#' @param shuffle A logical value indicating whether to shuffle the input data.
 #' @param ... Additional arguments passed to
 #' \href{https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit}{
 #' tf.keras.fit}.
 #' @export
 setMethod(
   "fit", "neer_match.matching_model.DLMatchingModel",
-  function(object, left, right, matches, ...) {
-    matching_model_fit(object, left, right, matches, ...)
+  function(object, left, right, matches,
+           batch_size = 16L, mismatch_share = 0.1,
+           shuffle = TRUE, ...) {
+    matching_model_fit(
+      object,
+      left, right, matches,
+      batch_size, mismatch_share,
+      shuffle, ...
+    )
   }
 )
 
 #' @rdname fit
 #' @description
-#' \subsection{\code{\link{DLMatchingModel}}}{
+#' \subsection{\code{\link{NSMatchingModel}}}{
 #' The method passes the constructed generator and any
 #' additional call arguments to
 #' directly to the
@@ -521,7 +535,10 @@ predict.neer_match.matching_model.NSMatchingModel <- function(
 matching_model_suggest <- function(object, left, right, ...) {
   py_left <- reticulate::r_to_py(left)
   py_right <- reticulate::r_to_py(right)
-  object$suggest(py_left, py_right, ...)
+  suggestions <- object$suggest(py_left, py_right, ...)
+  suggestions$left <- as.integer(suggestions$left) + 1L
+  suggestions$right <- as.integer(suggestions$right) + 1L
+  suggestions
 }
 
 #' @rdname suggest

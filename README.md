@@ -99,8 +99,8 @@ fit(
   epochs = 1L, batch_size = 16L
 )
 #> | Epoch      | BCE        | Recall     | Precision  | F1         | Sat        |
-#> | 0          | 7.0362     | 0.2821     | 0.0859     | 0.1317     | 0.7269     |
-#> Training finished at Epoch 0 with DL loss 7.0362 and Sat 0.7269
+#> | 0          | 6.9980     | 0.1795     | 0.0598     | 0.0897     | 0.7296     |
+#> Training finished at Epoch 0 with DL loss 6.9980 and Sat 0.7296
 ```
 
 # Installation

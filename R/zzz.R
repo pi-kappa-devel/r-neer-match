@@ -2,7 +2,7 @@
 #' @importFrom reticulate import py_install py_module_available
 
 .onLoad <- function(libname, pkgname) {
-  py_version <- "0.7.21"
+  py_version <- "0.7.33"
   if (!reticulate::py_module_available("neer_match")) {
     reticulate::py_install(paste0("neer_match==", py_version))
     if (!reticulate::py_module_available("neer_match")) {

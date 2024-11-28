@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'man/**'
-      - 'README.Rmd'
 
 jobs:
   build-and-deploy:
@@ -20,14 +17,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
       - name: Install dependencies
         run: |
-          sudo apt-get install -y lftp pandoc
+          sudo apt-get install -y lftp libcurl4-openssl-dev libfribidi-dev libharfbuzz-dev pandoc pandoc-citeproc
           pip install neer-match
           Rscript -e "
             install.packages(c('pkgdown', 'reticulate', 'rmarkdown', 'roxygen2', 'tensorflow'))
@@ -48,6 +45,7 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
           lftp -c "
+            set ssl:verify-certificate no;
             open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER;
             mirror -R -P 5 docs $FTP_DOCS_PATH;
             bye;
